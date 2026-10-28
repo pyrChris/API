@@ -97,12 +97,10 @@ public class ReadJson {
             String eyeColor = (String)jsonObject.get("eye_color");
             System.out.println(name + "'s eye color: " + eyeColor);
 
-            org.json.simple.JSONArray starship = (org.json.simple.JSONArray) jsonObject.get("starships");
-            n = starship.size();
-            for (int i = 0; i < n; i++){
-                String temp = (String) starship.get(i);
-                System.out.println(temp);
-            }
+            //String starship = (String)jsonObject.get("starships");
+//            org.json.simple.JSONArray starship = (org.json.simple.JSONArray) jsonObject.get("starships");
+//            System.out.println(starship);
+            pull("https://swapi.dev/api/starships/13/");
         }
 
         catch (Exception e) {
@@ -113,6 +111,44 @@ public class ReadJson {
 
 
     }
-}
+    public void pull(String inputURL) throws ParseException{
+        String output = "abc";
+        String totlaJson="";
+        try {
 
+            URL url = new URL(inputURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+            //if you get the error 403, uncomment line of code below
+            //conn.setRequestProperty("User-Agent", "Mozilla/5.0"); // Add User-Agent
+
+
+            if (conn.getResponseCode() != 200) {
+
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+
+            System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                System.out.println(output);
+                totlaJson+=output;
+            }
+
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(output);
+    }
+}
 
